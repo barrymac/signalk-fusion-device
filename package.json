@@ -1,28 +1,28 @@
 {
-  "name": "signalk-fusion-stereo",
-  "version": "1.11.0",
-  "description": "Plugin that controls a Fusion stereo",
+  "name": "signalk-fusion-device",
+  "version": "0.0.1",
+  "description": "Plugin that behaves like Fusion stereo with multiple sound cards",
   "main": "index.js",
   "scripts": {
     "test": "$NODE $npm_package_main",
-    "create-release": "github-create-release --owner sbender9 --repository $npm_package_name",
+    "create-release": "github-create-release --owner barrymac --repository $npm_package_name",
     "release": "git tag -d v$npm_package_version && git tag v$npm_package_version && git push --tags && git push && npm run create-release",
     "build_ios": "webpack ios.js -o ios_fusion.js"
   },
   "keywords": [
     "signalk-node-server-plugin"
   ],
-  "author": "scott@scottbender.net",
+  "author": "barrymac@gmail.com",
   "license": "ISC",
   "dependencies": {
     "baconjs": "^0.7.88",
-    "debug": "^3.1.0",
+    "debug": "^4.3.4",
     "lodash": "^4.17.4",
     "util": "^0.10.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sbender9/signalk-fusion-stereo"
+    "url": "https://github.com/barrymac/signalk-fusion-device"
   },
   "signalk-plugin-enabled-by-default": true,
   "devDependencies": {
