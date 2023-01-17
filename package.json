@@ -1,6 +1,6 @@
 {
   "name": "signalk-fusion-device",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Plugin that behaves like Fusion stereo with multiple sound cards",
   "main": "index.js",
   "scripts": {
