@@ -18,6 +18,7 @@
     "baconjs": "^0.7.88",
     "debug": "^4.3.4",
     "lodash": "^4.17.4",
+    "signalk-fusion-stereo": "^1.11.0",
     "util": "^0.10.3"
   },
   "repository": {

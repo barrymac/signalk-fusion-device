@@ -1,10 +1,13 @@
-const plugin = require('@signalk/signalk-plugin-fusion-audio');
-const {PGN} = plugin;
 const {sendProductInformation} = require('@signalk/signalk-plugin-fusion-audio');
 const {exec} = require('child_process');
 var lastMute = false;
 var desiredZone = 0; // define desired zone here
 var soundCardId = 0; // define sound card id here
+
+// Define local constants for the PGNs
+const VolumeCommand = 126993;
+const MuteCommand = 126995;
+const SourceCommand = 126998;
 
 module.exports = function (app) {
 // send a product information message to identify the plugin as a Fusion audio device
@@ -20,7 +23,7 @@ module.exports = function (app) {
 
 // Listen for volume command PGN
     app.on(nmea2000out, (n2k) => {
-        if (n2k.pgn === PGN.VolumeCommand) {
+        if (n2k.pgn === VolumeCommand) {
 // check if the command is for the desired zone
             if (n2k.fields.Zone === desiredZone) {
 // change the volume for the specific sound card
@@ -41,7 +44,7 @@ module.exports = function (app) {
 
 // Listen for mute command PGN
     app.on(nmea2000out, (n2k) => {
-        if (n2k.pgn === PGN.MuteCommand) {
+        if (n2k.pgn === MuteCommand) {
             lastMute = n2k.fields.Mute;
             console.log(`Mute changed to: ${lastMute}`);
 // check if the command is for the desired zone
@@ -73,6 +76,26 @@ module.exports = function (app) {
                         ;
                     });
                 }
+            }
+        }
+    });
+
+    app.on("nmea2000out", function (data) {
+        if (data.pgn === SourceCommand) {
+            // check if the command is for the desired zone
+            if (data.fields.Zone === desiredZone) {
+                // change the audio source input
+                exec(`amixer -c ${soundCardId} set '${data.fields.Source}'`, (error, stdout, stderr) => {
+                    if (error) {
+                        console.log(`error: ${error.message}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.log(`stderr: ${stderr}`);
+                        return;
+                    }
+                    console.log(`stdout: ${stdout}`);
+                });
             }
         }
     });
