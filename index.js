@@ -1,13 +1,23 @@
-const {sendProductInformation} = require('@signalk/signalk-plugin-fusion-audio');
 const {exec} = require('child_process');
 var lastMute = false;
 var desiredZone = 0; // define desired zone here
 var soundCardId = 0; // define sound card id here
 
 // Define local constants for the PGNs
-const VolumeCommand = 126993;
-const MuteCommand = 126995;
-const SourceCommand = 126998;
+// const PGN_VOLUME_COMMAND = 126993;
+// const PGN_MUTE_COMMAND = 126995;
+// const PGN_SOURCE_COMMAND = 126998;
+
+const PGN_VOLUME_COMMAND = 0xF004;
+const PGN_MUTE_COMMAND = 0xF005;
+const PGN_SOURCE_COMMAND = 0xF006;
+
+function sendProductInformation(app, productInformation) {
+    app.signalk.emit('nmea2000out', {
+        pgn: PGN.ProductInformation,
+        fields: productInformation
+    });
+}
 
 module.exports = function (app) {
 // send a product information message to identify the plugin as a Fusion audio device
@@ -23,7 +33,7 @@ module.exports = function (app) {
 
 // Listen for volume command PGN
     app.on(nmea2000out, (n2k) => {
-        if (n2k.pgn === VolumeCommand) {
+        if (n2k.pgn === PGN_VOLUME_COMMAND) {
 // check if the command is for the desired zone
             if (n2k.fields.Zone === desiredZone) {
 // change the volume for the specific sound card
@@ -44,7 +54,7 @@ module.exports = function (app) {
 
 // Listen for mute command PGN
     app.on(nmea2000out, (n2k) => {
-        if (n2k.pgn === MuteCommand) {
+        if (n2k.pgn === PGN_MUTE_COMMAND) {
             lastMute = n2k.fields.Mute;
             console.log(`Mute changed to: ${lastMute}`);
 // check if the command is for the desired zone
@@ -81,7 +91,7 @@ module.exports = function (app) {
     });
 
     app.on("nmea2000out", function (data) {
-        if (data.pgn === SourceCommand) {
+        if (data.pgn === PGN_SOURCE_COMMAND) {
             // check if the command is for the desired zone
             if (data.fields.Zone === desiredZone) {
                 // change the audio source input
