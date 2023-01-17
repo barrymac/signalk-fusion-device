@@ -4,13 +4,9 @@ var desiredZone = 0; // define desired zone here
 var soundCardId = 0; // define sound card id here
 
 // Define local constants for the PGNs
-// const PGN_VOLUME_COMMAND = 126993;
-// const PGN_MUTE_COMMAND = 126995;
-// const PGN_SOURCE_COMMAND = 126998;
-
-const PGN_VOLUME_COMMAND = 0xF004;
-const PGN_MUTE_COMMAND = 0xF005;
-const PGN_SOURCE_COMMAND = 0xF006;
+const PGN_VOLUME_COMMAND = 0xF004;  //126993;
+const PGN_MUTE_COMMAND = 0xF005;    //126995;
+const PGN_SOURCE_COMMAND = 0xF006;  //126998;
 
 function sendProductInformation(app, productInformation) {
     app.signalk.emit('nmea2000out', {
@@ -22,11 +18,11 @@ function sendProductInformation(app, productInformation) {
 module.exports = function (app) {
 // send a product information message to identify the plugin as a Fusion audio device
     sendProductInformation(app, {
-        PIDIL: 0x10, // change this to a unique address on your network
-        PIDIH: 0x00,
-        DF: [0x06, 0x08, 0x09, 0x0A, 0x0B], // audio function, remote control function, equalization function, tone control function, balance and fader function
-        DC: [0x14, 0x15, 0x17], // audio device class, multi-zone audio device class, audio processor device class
-        FirmwareVersion: 0x01,
+        PIDIL: 0x10, // 16 - change this to a unique address on your network
+        PIDIH: 0x00, // 0
+        DF: [0x06, 0x08, 0x09, 0x0A, 0x0B], // 6, 8, 9, 10, 11 - audio function, remote control function, equalization function, tone control function, balance and fader function
+        DC: [0x14, 0x15, 0x17], // 20, 21, 23 - audio device class, multi-zone audio device class, audio processor device class
+        FirmwareVersion: 0x01, // 1
         ModelId: "SK-AUDIO-PLUGIN",
         ModelVersion: "1.0",
     });
